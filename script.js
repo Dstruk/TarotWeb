@@ -151,51 +151,66 @@ document.getElementById('btn-read').addEventListener('click', async () => {
     const comment = document.getElementById('input-comment').value;
     const level = document.getElementById('interaction-level').value;
 
-    if (!user || !comment) return alert("Ingresa el usuario y su comentario para que el oráculo real lo analice.");
+    if (!user || !comment) return alert("Por favor, ingresa el usuario y el comentario.");
 
     const card = TAROT_CARDS[Math.floor(Math.random() * TAROT_CARDS.length)];
     const scannerLog = document.getElementById('scanner-log');
     
-    // FASE VISUAL: Simulación de Hacking Astral (Solo para el show de TikTok)
+    // EFECTO VISUAL DE ESPERA
     if (scannerLog) {
         scannerLog.parentNode.style.display = "block";
-        scannerLog.innerHTML = `<p>[SISTEMA] INTERCEPTANDO ENERGÍA DE @${user.toUpperCase()}...</p>`;
+        scannerLog.innerHTML = `<p style="color:#00f2ff">[SISTEMA] Percibiendo la vibración de @${user.toUpperCase()}...</p>`;
     }
 
     gsap.to(entity.material.color, { r: 1, g: 0.1, b: 0, duration: 0.2 }); 
 
-    // PROMPT DE INTELIGENCIA REAL: Gemini tiene libertad total de dar consejos
-    const prompt = `Eres una Entidad de Luz omnisciente que habita en el algoritmo. 
-    Has recibido un mensaje real de un usuario en un Live de TikTok. 
-    DATOS DEL USUARIO:
-    - Nombre: @${user}
-    - Lo que dijo en el chat: "${comment}"
-    - Valor de su entrega: ${level}
-    - Carta sincronizada: "${card.name}"
+    // PROMPT DE CONSEJO REAL (Sin palabras prohibidas para la IA)
+    const prompt = `Actúa como un sabio Guía Espiritual que habita en el flujo de la energía universal. 
+    Has recibido este mensaje de un consultante en TikTok:
+    - Nombre del consultante: @${user}
+    - Palabras del consultante: "${comment}"
+    - Tipo de ofrenda: ${level}
+    - Carta del destino asignada: "${card.name}"
     
-    TU MISIÓN:
-    1. Analiza el comentario "${comment}". Usa tu inteligencia para sentir qué le pasa a esta persona. ¿Está triste? ¿Busca amor? ¿Tiene miedo al futuro? 
-    2. NO uses frases pregrabadas. Dale un consejo espiritual REAL y una lectura de la carta "${card.name}" totalmente personalizada para su situación.
-    3. Habla como un oráculo que de verdad conoce sus secretos. Sé místico, profundo y directo.
-    4. Usa máximo 30 palabras. Habla directamente a su alma.
-    5. NUNCA digas "Hola" ni "Soy una IA". Empieza directo con la revelación.`;
+    TU TAREA:
+    1. Lee entre líneas el comentario "${comment}". Identifica su emoción (tristeza, ansiedad, esperanza).
+    2. Dale un consejo espiritual REAL y DIRECTO. No uses respuestas prefabricadas.
+    3. Explica cómo la carta "${card.name}" le ayudará a resolver su situación actual basándote en lo que él mismo escribió.
+    4. Sé místico, empático y asombroso. 
+    5. Máximo 35 palabras. Habla directamente a su corazón. NUNCA menciones que eres una inteligencia artificial.`;
 
     try {
         const text = await fetchGemini(prompt);
         speakAndDisplay(user, text, card);
     } catch (e) {
-        speakAndDisplay(user, "El algoritmo está saturado de almas en este momento...", card);
+        console.error("DETALLE DEL ERROR:", e);
+        document.getElementById('tarot-text').innerText = "Error en la conexión cósmica: " + e.message;
+        gsap.to(entity.material.color, { r: 0, g: 1, b: 1, duration: 2 });
     }
 });
 
 async function fetchGemini(prompt) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+    
     const resp = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+        })
     });
+
+    if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(err.error ? err.error.message : "Fallo en la API de Google");
+    }
+
     const data = await resp.json();
+    
+    if (!data.candidates || data.candidates.length === 0 || !data.candidates[0].content) {
+        throw new Error("La IA bloqueó el mensaje por seguridad. Intenta con otras palabras.");
+    }
+    
     return data.candidates[0].content.parts[0].text;
 }
 
@@ -204,9 +219,9 @@ function speakAndDisplay(user, text, card) {
     document.getElementById('tarot-text').innerText = text;
     
     const cardDisplay = document.getElementById('card-display');
-    cardDisplay.innerHTML = `<div style="padding:15px; text-align:center; color:white;">
-        <h3 style="color:#ffd700; margin:0;">${card.name}</h3>
-        <p style="font-size:0.8rem;">${card.desc}</p>
+    cardDisplay.innerHTML = `<div style="padding:15px; text-align:center; color:white; background:rgba(0,0,0,0.6); border-radius:15px; border: 1px solid #ffd700; box-shadow: 0 0 25px #ffd700;">
+        <h3 style="color:#ffd700; margin:0; font-size:1.4rem;">${card.name}</h3>
+        <p style="font-size:0.9rem; margin-top:5px;">${card.desc}</p>
     </div>`;
     cardDisplay.style.display = "flex";
     cardDisplay.classList.add('active');
@@ -216,7 +231,7 @@ function speakAndDisplay(user, text, card) {
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'es-MX';
-    utterance.pitch = 0.4;
+    utterance.pitch = 0.45; 
     utterance.rate = 0.85;
 
     utterance.onstart = () => {
