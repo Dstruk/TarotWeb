@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarot Astral - Entidad de Luz</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Three.js para el 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP para animaciones fluidas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+</head>
+<body>
+    <!-- Canvas para el Universo y la Entidad -->
+    <canvas id="canvas-3d"></canvas>
+
+    <!-- Interfaz de Lectura (Lo que ve el público) -->
+    <div id="ui-overlay">
+        <div id="response-container">
+            <h2 id="user-name"></h2>
+            <p id="tarot-text"></p>
+        </div>
+        <div id="card-display"></div>
+    </div>
+
+    <!-- Panel de Control (Solo para el Host/Tú) -->
+    <div id="host-panel">
+        <input type="text" id="input-username" placeholder="Usuario TikTok">
+        <select id="interaction-level">
+            <option value="comment">Comentario (Básico)</option>
+            <option value="gift_small">Regalo Pequeño (Medio)</option>
+            <option value="gift_large">¡GRAN REGALO! (Épico)</option>
+        </select>
+        <button id="btn-read">Leer Destino</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
