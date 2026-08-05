@@ -91,7 +91,7 @@ function animate() {
 }
 
 // 3. IA y Voz
-const API_KEY = "TU_API_KEY_AQUI"; // REEMPLAZA ESTO
+const API_KEY = "AIzaSyAaS6zvPr0EE7VGzIrq_iSHgBtRy-uXb9A"; // REEMPLAZA ESTO
 
 document.getElementById('btn-read').addEventListener('click', async () => {
     const user = document.getElementById('input-username').value;
