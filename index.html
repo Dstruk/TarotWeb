@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarot Astral - Entidad de Luz</title>
+    <title>Oráculo Astral - TikTok Live</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Three.js para el 3D -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- GSAP para animaciones fluidas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
 </head>
 <body>
-    <!-- Canvas para el Universo y la Entidad -->
     <canvas id="canvas-3d"></canvas>
 
-    <!-- Interfaz de Lectura (Lo que ve el público) -->
     <div id="ui-overlay">
+        <!-- Log de escaneo algorítmico -->
+        <div id="scanner-container">
+            <div id="scanner-line"></div>
+            <div id="scanner-log"></div>
+        </div>
+
         <div id="response-container">
             <h2 id="user-name"></h2>
             <p id="tarot-text"></p>
@@ -23,15 +25,20 @@
         <div id="card-display"></div>
     </div>
 
-    <!-- Panel de Control (Solo para el Host/Tú) -->
+    <!-- Panel de Control para el Host (Streamer) -->
     <div id="host-panel">
-        <input type="text" id="input-username" placeholder="Usuario TikTok">
-        <select id="interaction-level">
-            <option value="comment">Comentario (Básico)</option>
-            <option value="gift_small">Regalo Pequeño (Medio)</option>
-            <option value="gift_large">¡GRAN REGALO! (Épico)</option>
-        </select>
-        <button id="btn-read">Leer Destino</button>
+        <div class="panel-row">
+            <input type="text" id="input-username" placeholder="@Usuario_TikTok">
+            <select id="interaction-level">
+                <option value="comentario">💬 Comentario</option>
+                <option value="regalo_pequeño">🌹 Regalo Pequeño</option>
+                <option value="regalo_grande">🦁 GRAN REGALO</option>
+            </select>
+        </div>
+        <div class="panel-row">
+            <input type="text" id="input-comment" placeholder="¿Qué dijo el usuario? (Para análisis algorítmico)">
+            <button id="btn-read">DESCIFRAR ALMA</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
